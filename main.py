@@ -1,10 +1,18 @@
-from nextcord.ext import commands
+#TODO rewrite to own code or another library
+from discord.ext import commands
+from embend_handler import  FileChek
 import settings
+
 # the prefix is not used in this example
-bot = commands.Bot(command_prefix='$')
+print(commands)
+
+bot = commands.Bot(command_prefix='/')
+file_check = FileChek()
 
 @bot.event
 async def on_message(message):
+    if message.attachments:
+        await file_check.check_attachments(message.attachments)
     print(f'Message from {message.author}: {message.content}')
 
 bot.run(settings.token)
