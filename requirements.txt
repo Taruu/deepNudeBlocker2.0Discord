@@ -9,4 +9,5 @@ multidict==5.2.0
 python-magic==0.4.24
 PyYAML==6.0
 typing-extensions==3.10.0.2
+Wand==0.6.7
 yarl==1.7.0
