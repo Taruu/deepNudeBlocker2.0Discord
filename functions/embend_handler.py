@@ -49,7 +49,7 @@ async def check_image(session, pool, loop, bytes_file, event):
     image256 = await loop.run_in_executor(pool,
                                           convert_image,
                                           bytes_file)
-    async with session.post(f"http://{settings.server_url}/check_file",
+    async with session.post(f"{settings.server_url}/check_file",
                             data={"file": image256}) as response:
         if event.is_set():
             return

@@ -16,6 +16,8 @@ root_logger.setLevel(logging.DEBUG)
 
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger('main')
+
+
 config = Config()
 bot_token = config.get('BOT_TOKEN')
 server_url = config.get("HOST.IMAGE_CHECK_SERVER")
