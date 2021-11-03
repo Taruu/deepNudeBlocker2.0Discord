@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 from discord.ext import commands
 import datetime
@@ -15,35 +17,7 @@ link_regex = re.compile(
 
 class ChannelWatcher(commands.Cog):
     def __init__(self, bot):
-
         self.bot = bot
-        self.log_channel = None
-
-    async def send_log(self, message, deleted):
-        if not self.log_channel:
-            self.log_channel = await self.bot.fetch_channel(761940951257055253)
-        embed = discord.Embed()
-        embed.add_field(name=f"User {message.author.name}",
-                        value=f"""{message.author.id}""",
-                        inline=False)
-
-        embed.add_field(name=f"Guild {message.guild.name}",
-                        value=f"""{message.guild.name}""",
-                        inline=False)
-
-        embed.add_field(name=f"Channel",
-                        value=f"""{message.channel.id}""",
-                        inline=True)
-        embed.add_field(name=f"Message",
-                        value=f"""{message.id}""",
-                        inline=False)
-
-        embed.add_field(name=f"Deleted?",
-                        value=f"""{deleted}""",
-                        inline=True)
-        embed.set_footer(text=f"Checked by {self.bot.user.name}",
-                         icon_url=self.bot.user.avatar_url)
-        await self.log_channel.send(embed=embed)
 
     @commands.command(pass_context=True)
     async def help(self, ctx):
