@@ -6,8 +6,6 @@ from wand.image import Image
 import asyncio
 import settings
 import discord
-from wand.display import display
-from multiprocessing import Process, Queue
 import re
 
 logger = logging.getLogger('main')
@@ -135,4 +133,3 @@ class CheckContent:
                 done, pending = await asyncio.wait(tasks)
                 close_task_f.cancel()
 
-# return result

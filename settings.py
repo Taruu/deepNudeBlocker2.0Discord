@@ -25,6 +25,8 @@ config = Config()
 bot_token = config.get('BOT_TOKEN')
 server_url = config.get("HOST.IMAGE_CHECK_SERVER")
 server_token = config.get("SERVER_TOKEN")
+topgg_token = config.get("TOP_GG_TOKEN")
+
 coefficient_unsafe = config.get("COEFFICIENT.UNSAFE")
 
 link_code = config.get("DISCORD.LINK_CODE")
