@@ -30,16 +30,19 @@ class FileConvert:
         return result
 
     def convert_image(self, byte_file: bytes):
-        with Image(blob=byte_file) as img:
-            if (img.width, img.height) != (256, 256):
-                img.resize(256, 256)
-                img.filename = "image_to_test"
-                img.format = "png"
-                return img.make_blob()
-            else:
-                img.filename = "image_to_test"
-                img.format = "png"
-                return img.make_blob()
+        try:
+            with Image(blob=byte_file) as img:
+                if (img.width, img.height) != (256, 256):
+                    img.resize(256, 256)
+                    img.filename = "image_to_test"
+                    img.format = "png"
+                    return img.make_blob()
+                else:
+                    img.filename = "image_to_test"
+                    img.format = "png"
+                    return img.make_blob()
+        except Exception as e:
+            return None
 
 
 file_convert = FileConvert()
@@ -58,11 +61,11 @@ class CheckContent:
         image256 = await loop.run_in_executor(pool,
                                               convert_image,
                                               bytes_file)
-
+        if event.is_set():
+            return
         async with session.post(f"{settings.server_url}/check_file",
                                 data={"file": image256}) as response:
-            if event.is_set():
-                return
+
             result = await response.json()
         if not result.get("file_hash"):
             return
@@ -88,7 +91,7 @@ class CheckContent:
 
     async def close_tasks(self, lock, tasks):
         await lock.acquire()
-        async for task in tasks:
+        for task in tasks:
             task.cancel()
 
     async def check_urls(self, message):
@@ -132,4 +135,3 @@ class CheckContent:
                     self.close_tasks(lock, tasks))
                 done, pending = await asyncio.wait(tasks)
                 close_task_f.cancel()
-
