@@ -32,16 +32,19 @@ class FileConvert:
     def convert_image(self, byte_file: bytes):
         try:
             with Image(blob=byte_file) as img:
-                if (img.width, img.height) != (256, 256):
-                    img.resize(256, 256)
-                    img.filename = "image_to_test"
-                    img.format = "png"
-                    return img.make_blob()
-                else:
-                    img.filename = "image_to_test"
-                    img.format = "png"
-                    return img.make_blob()
+                print(img)
+            if (img.width, img.height) != (256, 256):
+                img.resize(256, 256)
+                img.filename = "image_to_test"
+                img.format = "png"
+                result = img.make_blob()
+                return result
+            else:
+                img.filename = "image_to_test"
+                img.format = "png"
+                return img.make_blob()
         except Exception as e:
+            logger.error(f"{e}")
             return None
 
 
@@ -89,8 +92,8 @@ class CheckContent:
         except discord.HTTPException as e:
             pass
 
-    async def close_tasks(self, lock, tasks):
-        await lock.acquire()
+    async def close_tasks(self, event, tasks):
+        await event.wait()
         for task in tasks:
             task.cancel()
 
@@ -113,7 +116,7 @@ class CheckContent:
                     self.check_image(session, pool, loop, bytes_file, event))
                     for bytes_file in bytes_list]
                 close_task_f = asyncio.create_task(
-                    self.close_tasks(lock, tasks))
+                    self.close_tasks(event, tasks))
                 done, pending = await asyncio.wait(tasks)
                 close_task_f.cancel()
 
