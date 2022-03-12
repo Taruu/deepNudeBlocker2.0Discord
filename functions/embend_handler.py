@@ -98,7 +98,6 @@ class CheckContent:
             task.cancel()
 
     async def check_urls(self, message):
-
         message_urls = set(re.findall(settings.link_regex, message.content))
         if not message_urls:
             return
@@ -135,6 +134,6 @@ class CheckContent:
                     self.check_image(session, pool, loop, bytes_file, event))
                     for bytes_file in bytes_list]
                 close_task_f = asyncio.create_task(
-                    self.close_tasks(lock, tasks))
+                    self.close_tasks(event, tasks))
                 done, pending = await asyncio.wait(tasks)
                 close_task_f.cancel()
