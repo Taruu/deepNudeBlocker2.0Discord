@@ -32,17 +32,16 @@ class FileConvert:
     def convert_image(self, byte_file: bytes):
         try:
             with Image(blob=byte_file) as img:
-                print(img)
-            if (img.width, img.height) != (256, 256):
-                img.resize(256, 256)
-                img.filename = "image_to_test"
-                img.format = "png"
-                result = img.make_blob()
-                return result
-            else:
-                img.filename = "image_to_test"
-                img.format = "png"
-                return img.make_blob()
+                if (img.width, img.height) != (256, 256):
+                    img.resize(256, 256)
+                    img.filename = "image_to_test"
+                    img.format = "png"
+                    result = img.make_blob()
+                    return result
+                else:
+                    img.filename = "image_to_test"
+                    img.format = "png"
+                    return img.make_blob()
         except Exception as e:
             logger.error(f"{e}")
             return None
