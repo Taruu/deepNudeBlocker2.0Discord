@@ -22,7 +22,8 @@ class FileConvert:
             async with self.session.get(url) as resp:
                 if resp.status == 200:
                     file_bytes = await resp.content.read(128)
-
+                else:
+                    logger.error(f"Error {resp.status}")
                 mime_file = self.magic.from_buffer(file_bytes)
                 if "image" in mime_file:
                     file_bytes += await resp.content.read()
@@ -67,6 +68,8 @@ class CheckContent:
             return
         async with session.post(f"{settings.server_url}/check_file",
                                 data={"file": image256}) as response:
+            if response.status != 200:
+                logger.error(f"request {await response.json()}")
 
             result = await response.json()
         if not result.get("file_hash"):
@@ -82,7 +85,6 @@ class CheckContent:
             await channel.send(
                 f"{message.author.mention} your message can contain 18+ content.")
             await message.delete()
-            lock.release()
             await self.send_log(message, True)
         except discord.Forbidden as e:
             await self.send_log(message, False)
